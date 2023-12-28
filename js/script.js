@@ -102,6 +102,58 @@ window.addEventListener("DOMContentLoaded", () => {
 
     setClock('.timer', deadline);
 
-})
+
+    //Modal windows
+
+    const modalTrigger = document.querySelectorAll('[data-modal]'),
+          modal = document.querySelector('.modal'),
+          modalCloseBtn = document.querySelector('[data-close]');
+
+    function openModal() {
+        // modal.classList.add('show');
+        // modal.classList.remove('hide');
+        modal.classList.toggle('show');
+        document.body.style.overflow = 'hidden'; // заморозка прокрутки страницы
+        clearInterval(modalTimerId);
+        }
+
+
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', openModal);
+    })
+
+    function closeModal() {
+        // modal.classList.add('hide');
+        // modal.classList.remove('show');
+        modal.classList.toggle('show');
+        document.body.style.overflow = '';
+    }
+    
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => { //закрытие окна по клику на внешнюю область
+        if(e.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => { //закрытие окна клавишей Esc
+        if(e.code === 'Escape' && modal.classList.contains('show')) {
+            closeModal();
+        }
+    });
+
+    //const modalTimerId = setTimeout(openModal, 3000); //открытие окна через 3с 
+
+    function showModalByScroll() { //открытие окна при пролистывании страницы до конца
+        if(window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight -1) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
+
+});
 
 
